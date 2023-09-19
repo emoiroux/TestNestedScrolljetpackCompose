@@ -23,44 +23,54 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.testnestedscroll.databinding.FragmentFirstBinding
-import com.example.testnestedscroll.databinding.FragmentSecondBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class SecondFragment : Fragment() {
+class ThirdFragment : Fragment() {
 
-    private var _binding: FragmentSecondBinding? = null
-    private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
-        return binding.root
-
-    }
 
     @OptIn(ExperimentalFoundationApi::class)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        return ComposeView(requireContext()).apply {
+            setContent {
+                //binding.buttonFirst.setOnClickListener {
+                  //  findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                //}
+
+           //     binding.composeTxtView.setContent {
+                    HorizontalPager(pageCount = 3/*, state = pagerState*/) {
+                        Column {
+                            LazyColumn(modifier = Modifier
+                                .fillMaxSize()
+                                .nestedScroll(rememberNestedScrollInteropConnection()),
+                                /*state = scrollState*/) {
+                                item { Text("Page $it / 3", modifier = Modifier.height(200.dp)) }
+                                items(100) {
+                                    Text("Item $it / 100", modifier = Modifier.height(100.dp))
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_ThirdFragment)
-        }
-
-        binding.composeTxtView.setContent {
-            pager()
-        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 }
